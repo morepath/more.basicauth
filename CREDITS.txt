@@ -1,0 +1,5 @@
+CREDITS
+=======
+
+* Martijn Faassen (more.basicauth was extracted from Morepath)
+* Henri Hulski (author)

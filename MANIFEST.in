@@ -1,0 +1,4 @@
+include *.txt *.rst *.cfg *.py *.ini
+exclude .installed.cfg .mr.developer.cfg
+recursive-include more *.py
+
