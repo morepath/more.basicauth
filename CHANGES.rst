@@ -1,8 +1,8 @@
 CHANGES
 *******
 
-0.1.dev0 (unreleased)
-=====================
+0.1 (2016-04-16)
+================
 
 - Extract Basic Auth from Morepath.
 - Return NO_IDENTITY instead of None, if user cannot identify.
