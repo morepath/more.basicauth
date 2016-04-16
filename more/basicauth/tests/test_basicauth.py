@@ -165,7 +165,7 @@ def test_basic_auth_remember():
         # auth, but at least won't crash
         response = Response()
         morepath.remember_identity(response, request, Identity('foo'),
-                                  lookup=request.lookup)
+                                   lookup=request.lookup)
         return response
 
     @App.identity_policy()
