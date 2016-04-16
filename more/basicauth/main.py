@@ -6,8 +6,8 @@ from morepath.compat import bytes_
 
 
 class BasicAuthIdentityPolicy(object):
-    """Identity policy that uses HTTP Basic Authentication.
-    """
+    """Identity policy that uses HTTP Basic Authentication."""
+
     def __init__(self, realm='Realm'):
         self.realm = realm
 
