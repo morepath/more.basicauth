@@ -1,28 +1,30 @@
 more.basicauth: HTTP Basic Authentication integration for Morepath
 ==================================================================
 
-
 Overview
 --------
 
 This is a Morepath_ authentication extension for HTTP Basic Authentication.
-It was originally part of Morepath, but because it's not really the best choice,
-we decide to extract in in a separate extension.
+It was originally part of Morepath, but since basic auth is almost always what
+you don't want we decide to move it to a separate extension.
 
 Some Pros and Cons:
 
-*  This argues against basic auth: http://adrianotto.com/2013/02/why-http-basic-auth-is-bad
-*  But this argues *for* basic auth: https://www.rdegges.com/2015/why-i-love-basic-auth
+*  This argues against basic auth:
+   http://adrianotto.com/2013/02/why-http-basic-auth-is-bad
+*  But this argues *for* basic auth:
+   https://www.rdegges.com/2015/why-i-love-basic-auth
 
 Alternative authentication extensions for morepath are:
 
-* `more.jwtauth`_, a token based authentication system using JSON Web Token (JWT)
-* `more.isdangerous`_, a cookie based identity policy using isdangerous.
+* `more.jwtauth`_:
+  A token based authentication sytem using JSON Web Token (JWT).
+* `more.isdangerous`_:
+  A cookie based identity policy using isdangerous.
 
 .. _Morepath: http://morepath.readthedocs.org
 .. _more.jwtauth: https://github.com/morepath/more.jwtauth
 .. _more.isdangerous: https://github.com/morepath/more.itsdangerous
-
 
 
 Introduction
@@ -55,11 +57,15 @@ we can use an exception view, something like this::
           response.status_code = 401
       return "Unauthorized"
 
-For the login code, as ``remember_identity`` is not an option, you can just check the password::
+For the login code, as ``remember_identity`` is not an option,
+you can just check the password::
 
     # check whether user has password, using password hash and database
     if not user_has_password(username, password):
         return "Sorry, login failed" # or something more fancy
+
+Note that ``user_has_password`` stands in for whatever method you use
+to check a user's password; it's not part of Morepath.
 
 
 Usage
@@ -96,7 +102,7 @@ Here a full example for a basic setup::
         return "Unauthorized"
 
 
-The login form could just be::
+The login form could look like::
 
     from webob.exc import HTTPProxyAuthenticationRequired
 
