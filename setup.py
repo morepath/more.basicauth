@@ -2,7 +2,7 @@ import io
 from setuptools import setup, find_packages
 
 long_description = (
-    io.open('README.rst', encoding='utf-8').read() + '\n' +
+    io.open('README.rst', encoding='utf-8').read() + '\n\n' +
     io.open('CHANGES.rst', encoding='utf-8').read())
 
 setup(
