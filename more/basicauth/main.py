@@ -16,7 +16,7 @@ class BasicAuthIdentityPolicy(object):
 
         :param request: Request to extract identity information from.
         :type request: :class:`morepath.Request`.
-        :return: :class:`morepath.security.Identity` instance.
+        :return: :class:`morepath.Identity` instance.
         """
         try:
             authorization = request.authorization
@@ -41,7 +41,7 @@ class BasicAuthIdentityPolicy(object):
         :param request: request object.
         :type request: :class:`morepath.Request`
         :param identity: identity to remember.
-        :type identity: :class:`morepath.security.Identity`
+        :type identity: :class:`morepath.Identity`
         """
 
     def forget(self, response, request):
