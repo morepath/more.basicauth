@@ -1,7 +1,7 @@
 CHANGES
 *******
 
-0.2 (unreleased)
+0.2 (2016-04-25)
 ================
 
 - Upgrade to Morepath 0.14.
