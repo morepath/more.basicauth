@@ -4,7 +4,8 @@ CHANGES
 0.2 (unreleased)
 ================
 
-- Nothing changed yet.
+- Upgrade to Morepath 0.14.
+- Some minor improvements to the buildout setup workflow.
 
 
 0.1 (2016-04-16)

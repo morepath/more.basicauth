@@ -39,7 +39,7 @@ setup(
     ],
     install_requires=[
         'setuptools',
-        'morepath >= 0.13.2',
+        'morepath >= 0.14',
     ],
     extras_require=dict(
         test=['pytest >= 2.9.1',
