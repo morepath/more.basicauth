@@ -5,6 +5,9 @@ CHANGES
 ================
 
 - Upgrade to Morepath 0.15.
+- Add testenv for Python 3.5 and make it the default test environment.
+- Change author to "Morepath developers".
+- Clean up classifiers.
 
 
 0.2 (2016-04-25)
