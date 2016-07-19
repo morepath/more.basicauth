@@ -8,10 +8,6 @@ from webtest import TestApp as Client
 import base64
 
 
-def setup_module(module):
-    morepath.disable_implicit()
-
-
 def test_basic_auth_identity_policy():
     class App(morepath.App):
         pass
@@ -51,8 +47,6 @@ def test_basic_auth_identity_policy():
         def set_status_code(response):
             response.status_code = 401
         return "Unauthorized"
-
-    morepath.commit(App)
 
     c = Client(App())
 
@@ -99,8 +93,6 @@ def test_basic_auth_identity_policy_errors():
     @App.verify_identity()
     def verify_identity(identity):
         return True
-
-    morepath.commit(App)
 
     c = Client(App())
 
@@ -164,15 +156,12 @@ def test_basic_auth_remember():
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
         response = Response()
-        morepath.remember_identity(response, request, Identity('foo'),
-                                   lookup=request.lookup)
+        request.app.remember_identity(response, request, Identity('foo'))
         return response
 
     @App.identity_policy()
     def policy():
         return BasicAuthIdentityPolicy()
-
-    morepath.commit(App)
 
     c = Client(App())
 
@@ -194,14 +183,12 @@ def test_basic_auth_forget():
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
         response = Response(content_type='text/plain')
-        morepath.forget_identity(response, request, lookup=request.lookup)
+        request.app.forget_identity(response, request)
         return response
 
     @App.identity_policy()
     def policy():
         return BasicAuthIdentityPolicy()
-
-    morepath.commit(App)
 
     c = Client(App())
 
@@ -244,7 +231,6 @@ def test_login():
     def user_has_password(username, password):
         return username == 'user' and password == 'password'
 
-    morepath.commit(App)
     c = Client(App())
     r = c.post('/login', 'username=user&password=false', status=407)
     r = c.post('/login', 'username=not_exists&password=password', status=407)
