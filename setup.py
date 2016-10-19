@@ -32,12 +32,19 @@ setup(
         'Development Status :: 5 - Production/Stable'
     ],
     install_requires=[
-        'setuptools',
-        'morepath >= 0.15',
+        'morepath >= 0.16.1',
     ],
     extras_require=dict(
-        test=['pytest >= 2.9.1',
-              'pytest-cov',
-              'WebTest'],
+        test=[
+            'pytest >= 2.9.1',
+            'pytest-remove-stale-bytecode',
+            'WebTest >= 2.0.14',
+        ],
+        pep8=[
+            'flake8',
+        ],
+        coverage=[
+            'pytest-cov',
+        ],
     ),
 )
