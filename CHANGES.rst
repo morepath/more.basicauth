@@ -1,7 +1,7 @@
 CHANGES
 *******
 
-0.4 (unreleased)
+0.4 (2016-10-21)
 ================
 
 - We now use virtualenv and pip instead of buildout to set up the

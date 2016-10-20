@@ -7,7 +7,7 @@ long_description = (
 
 setup(
     name='more.basicauth',
-    version='0.4.dev0',
+    version='0.4',
     description="Basic Auth Identity Policy for Morepath",
     long_description=long_description,
     author="Morepath developers",
