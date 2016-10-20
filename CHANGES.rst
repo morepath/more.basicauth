@@ -4,7 +4,9 @@ CHANGES
 0.4 (unreleased)
 ================
 
-- Nothing changed yet.
+- We now use virtualenv and pip instead of buildout to set up the
+  development environment. A development section has been
+  added to the README accordingly.
 
 
 0.3 (2016-07-20)
