@@ -34,14 +34,14 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Development Status :: 5 - Production/Stable",
     ],
-    install_requires=["morepath >= 0.19",],
+    install_requires=["morepath >= 0.19"],
     extras_require=dict(
         test=[
             "pytest >= 2.9.1",
             "pytest-remove-stale-bytecode",
             "WebTest >= 2.0.14",
         ],
-        pep8=["flake8", "black",],
-        coverage=["pytest-cov",],
+        pep8=["flake8", "black"],
+        coverage=["pytest-cov"],
     ),
 )
