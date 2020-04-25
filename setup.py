@@ -43,6 +43,7 @@ setup(
         ],
         pep8=[
             'flake8',
+            'black',
         ],
         coverage=[
             'pytest-cov',
