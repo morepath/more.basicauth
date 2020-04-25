@@ -1,5 +1,5 @@
 import morepath
-from morepath import (Response, Identity, NO_IDENTITY)
+from morepath import Response, Identity, NO_IDENTITY
 
 from more.basicauth import BasicAuthIdentityPolicy
 from webob.exc import HTTPForbidden, HTTPProxyAuthenticationRequired
@@ -18,14 +18,15 @@ def test_basic_auth_identity_policy():
     class Permission:
         pass
 
-    @App.path(model=Model, path='{id}',
-              variables=lambda model: {'id': model.id})
+    @App.path(
+        model=Model, path="{id}", variables=lambda model: {"id": model.id}
+    )
     def get_model(id):
         return Model(id)
 
     @App.permission_rule(model=Model, permission=Permission)
     def get_permission(identity, model, permission):
-        return identity.userid == 'user' and identity.password == 'secret'
+        return identity.userid == "user" and identity.password == "secret"
 
     @App.view(model=Model, permission=Permission)
     def default(self, request):
@@ -45,20 +46,25 @@ def test_basic_auth_identity_policy():
         @request.after
         def set_status_code(response):
             response.status_code = 401
+
         return "Unauthorized"
 
     c = Client(App())
 
-    response = c.get('/foo', status=401)
+    response = c.get("/foo", status=401)
 
-    headers = {'Authorization': 'Basic '
-               + str(base64.b64encode(b'user:wrong').decode())}
-    response = c.get('/foo', headers=headers, status=401)
+    headers = {
+        "Authorization": "Basic "
+        + str(base64.b64encode(b"user:wrong").decode())
+    }
+    response = c.get("/foo", headers=headers, status=401)
 
-    headers = {'Authorization': 'Basic '
-               + str(base64.b64encode(b'user:secret').decode())}
-    response = c.get('/foo', headers=headers)
-    assert response.body == b'Model: foo'
+    headers = {
+        "Authorization": "Basic "
+        + str(base64.b64encode(b"user:secret").decode())
+    }
+    response = c.get("/foo", headers=headers)
+    assert response.body == b"Model: foo"
 
 
 def test_basic_auth_identity_policy_errors():
@@ -72,14 +78,15 @@ def test_basic_auth_identity_policy_errors():
     class Permission:
         pass
 
-    @App.path(model=Model, path='{id}',
-              variables=lambda model: {'id': model.id})
+    @App.path(
+        model=Model, path="{id}", variables=lambda model: {"id": model.id}
+    )
     def get_model(id):
         return Model(id)
 
     @App.permission_rule(model=Model, permission=Permission)
     def get_permission(identity, model, permission):
-        return identity.userid == 'user' and identity.password == 'sëcret'
+        return identity.userid == "user" and identity.password == "sëcret"
 
     @App.view(model=Model, permission=Permission)
     def default(self, request):
@@ -95,57 +102,61 @@ def test_basic_auth_identity_policy_errors():
 
     c = Client(App())
 
-    response = c.get('/foo', status=403)
+    response = c.get("/foo", status=403)
 
-    headers = {'Authorization': 'Something'}
-    response = c.get('/foo', headers=headers, status=403)
+    headers = {"Authorization": "Something"}
+    response = c.get("/foo", headers=headers, status=403)
 
-    headers = {'Authorization': 'Something other'}
-    response = c.get('/foo', headers=headers, status=403)
+    headers = {"Authorization": "Something other"}
+    response = c.get("/foo", headers=headers, status=403)
 
-    headers = {'Authorization': 'Basic ' + 'nonsense'}
-    response = c.get('/foo', headers=headers, status=403)
+    headers = {"Authorization": "Basic " + "nonsense"}
+    response = c.get("/foo", headers=headers, status=403)
 
-    headers = {'Authorization': 'Basic ' + 'nonsense1'}
-    response = c.get('/foo', headers=headers, status=403)
+    headers = {"Authorization": "Basic " + "nonsense1"}
+    response = c.get("/foo", headers=headers, status=403)
 
     # fallback to utf8
     headers = {
-        'Authorization': 'Basic ' + str(base64.b64encode(
-            'user:sëcret'.encode()).decode())}
-    response = c.get('/foo', headers=headers)
-    assert response.body == b'Model: foo'
+        "Authorization": "Basic "
+        + str(base64.b64encode("user:sëcret".encode()).decode())
+    }
+    response = c.get("/foo", headers=headers)
+    assert response.body == b"Model: foo"
 
     # fallback to latin1
     headers = {
-        'Authorization': 'Basic ' + str(base64.b64encode(
-            'user:sëcret'.encode('latin1')).decode())}
-    response = c.get('/foo', headers=headers)
-    assert response.body == b'Model: foo'
+        "Authorization": "Basic "
+        + str(base64.b64encode("user:sëcret".encode("latin1")).decode())
+    }
+    response = c.get("/foo", headers=headers)
+    assert response.body == b"Model: foo"
 
     # unknown encoding
     headers = {
-        'Authorization': 'Basic ' + str(base64.b64encode(
-            'user:sëcret'.encode('cp500')).decode())}
-    response = c.get('/foo', headers=headers, status=403)
+        "Authorization": "Basic "
+        + str(base64.b64encode("user:sëcret".encode("cp500")).decode())
+    }
+    response = c.get("/foo", headers=headers, status=403)
 
     headers = {
-        'Authorization': 'Basic ' + str(base64.b64encode(
-            'usersëcret'.encode()).decode())}
-    response = c.get('/foo', headers=headers, status=403)
+        "Authorization": "Basic "
+        + str(base64.b64encode("usersëcret".encode()).decode())
+    }
+    response = c.get("/foo", headers=headers, status=403)
 
     headers = {
-        'Authorization': 'Basic ' + str(base64.b64encode(
-            'user:sëcret:'.encode()).decode())}
-    response = c.get('/foo', headers=headers, status=403)
+        "Authorization": "Basic "
+        + str(base64.b64encode("user:sëcret:".encode()).decode())
+    }
+    response = c.get("/foo", headers=headers, status=403)
 
 
 def test_basic_auth_remember():
     class App(morepath.App):
         pass
 
-    @App.path(path='{id}',
-              variables=lambda model: {'id': model.id})
+    @App.path(path="{id}", variables=lambda model: {"id": model.id})
     class Model:
         def __init__(self, id):
             self.id = id
@@ -155,7 +166,7 @@ def test_basic_auth_remember():
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
         response = Response()
-        request.app.remember_identity(response, request, Identity('foo'))
+        request.app.remember_identity(response, request, Identity("foo"))
         return response
 
     @App.identity_policy()
@@ -164,15 +175,15 @@ def test_basic_auth_remember():
 
     c = Client(App())
 
-    response = c.get('/foo', status=200)
-    assert response.body == b''
+    response = c.get("/foo", status=200)
+    assert response.body == b""
 
 
 def test_basic_auth_forget():
     class App(morepath.App):
         pass
 
-    @App.path(path='{id}')
+    @App.path(path="{id}")
     class Model:
         def __init__(self, id):
             self.id = id
@@ -181,7 +192,7 @@ def test_basic_auth_forget():
     def default(self, request):
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
-        response = Response(content_type='text/plain')
+        response = Response(content_type="text/plain")
         request.app.forget_identity(response, request)
         return response
 
@@ -191,13 +202,13 @@ def test_basic_auth_forget():
 
     c = Client(App())
 
-    response = c.get('/foo', status=200)
-    assert response.body == b''
+    response = c.get("/foo", status=200)
+    assert response.body == b""
 
     assert sorted(response.headers.items()) == [
-        ('Content-Length', '0'),
-        ('Content-Type', 'text/plain; charset=UTF-8'),
-        ('WWW-Authenticate', 'Basic realm="Realm"'),
+        ("Content-Length", "0"),
+        ("Content-Type", "text/plain; charset=UTF-8"),
+        ("WWW-Authenticate", 'Basic realm="Realm"'),
     ]
 
 
@@ -212,29 +223,29 @@ def test_login():
     class Login:
         pass
 
-    @App.path(model=Login, path='login')
+    @App.path(model=Login, path="login")
     def get_login():
         return Login()
 
-    @App.json(model=Login, request_method='POST')
+    @App.json(model=Login, request_method="POST")
     def login(self, request):
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         if not user_has_password(username, password):
-            raise HTTPProxyAuthenticationRequired('Invalid username/password')
+            raise HTTPProxyAuthenticationRequired("Invalid username/password")
 
         return {
-            'username': username,
+            "username": username,
         }
 
     def user_has_password(username, password):
-        return username == 'user' and password == 'password'
+        return username == "user" and password == "password"
 
     c = Client(App())
-    r = c.post('/login', 'username=user&password=false', status=407)
-    r = c.post('/login', 'username=not_exists&password=password', status=407)
-    r = c.post('/login', 'username=user&password=password')
+    r = c.post("/login", "username=user&password=false", status=407)
+    r = c.post("/login", "username=not_exists&password=password", status=407)
+    r = c.post("/login", "username=user&password=password")
 
     assert r.json == {
-        'username': 'user',
+        "username": "user",
     }
