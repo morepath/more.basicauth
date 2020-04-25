@@ -1,9 +1,8 @@
-import io
 from setuptools import setup, find_packages
 
 long_description = (
-    io.open('README.rst', encoding='utf-8').read() + '\n\n' +
-    io.open('CHANGES.rst', encoding='utf-8').read())
+    open('README.rst', encoding='utf-8').read() + '\n\n'
+    + open('CHANGES.rst', encoding='utf-8').read())
 
 setup(
     name='more.basicauth',
@@ -25,14 +24,16 @@ setup(
         "Environment :: Web Environment",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
         "Topic :: Internet :: WWW/HTTP :: WSGI",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
-        'Development Status :: 5 - Production/Stable'
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: Implementation :: PyPy",
+        "Development Status :: 5 - Production/Stable",
     ],
     install_requires=[
-        'morepath >= 0.16.1',
+        'morepath >= 0.19',
     ],
     extras_require=dict(
         test=[

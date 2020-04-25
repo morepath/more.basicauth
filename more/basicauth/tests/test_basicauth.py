@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import morepath
 from morepath import (Response, Identity, NO_IDENTITY)
 
@@ -12,11 +11,11 @@ def test_basic_auth_identity_policy():
     class App(morepath.App):
         pass
 
-    class Model(object):
+    class Model:
         def __init__(self, id):
             self.id = id
 
-    class Permission(object):
+    class Permission:
         pass
 
     @App.path(model=Model, path='{id}',
@@ -52,12 +51,12 @@ def test_basic_auth_identity_policy():
 
     response = c.get('/foo', status=401)
 
-    headers = {'Authorization': 'Basic ' +
-               str(base64.b64encode(b'user:wrong').decode())}
+    headers = {'Authorization': 'Basic '
+               + str(base64.b64encode(b'user:wrong').decode())}
     response = c.get('/foo', headers=headers, status=401)
 
-    headers = {'Authorization': 'Basic ' +
-               str(base64.b64encode(b'user:secret').decode())}
+    headers = {'Authorization': 'Basic '
+               + str(base64.b64encode(b'user:secret').decode())}
     response = c.get('/foo', headers=headers)
     assert response.body == b'Model: foo'
 
@@ -66,11 +65,11 @@ def test_basic_auth_identity_policy_errors():
     class App(morepath.App):
         pass
 
-    class Model(object):
+    class Model:
         def __init__(self, id):
             self.id = id
 
-    class Permission(object):
+    class Permission:
         pass
 
     @App.path(model=Model, path='{id}',
@@ -80,7 +79,7 @@ def test_basic_auth_identity_policy_errors():
 
     @App.permission_rule(model=Model, permission=Permission)
     def get_permission(identity, model, permission):
-        return identity.userid == 'user' and identity.password == u'sëcret'
+        return identity.userid == 'user' and identity.password == 'sëcret'
 
     @App.view(model=Model, permission=Permission)
     def default(self, request):
@@ -113,31 +112,31 @@ def test_basic_auth_identity_policy_errors():
     # fallback to utf8
     headers = {
         'Authorization': 'Basic ' + str(base64.b64encode(
-            u'user:sëcret'.encode('utf8')).decode())}
+            'user:sëcret'.encode()).decode())}
     response = c.get('/foo', headers=headers)
     assert response.body == b'Model: foo'
 
     # fallback to latin1
     headers = {
         'Authorization': 'Basic ' + str(base64.b64encode(
-            u'user:sëcret'.encode('latin1')).decode())}
+            'user:sëcret'.encode('latin1')).decode())}
     response = c.get('/foo', headers=headers)
     assert response.body == b'Model: foo'
 
     # unknown encoding
     headers = {
         'Authorization': 'Basic ' + str(base64.b64encode(
-            u'user:sëcret'.encode('cp500')).decode())}
+            'user:sëcret'.encode('cp500')).decode())}
     response = c.get('/foo', headers=headers, status=403)
 
     headers = {
         'Authorization': 'Basic ' + str(base64.b64encode(
-            u'usersëcret'.encode('utf8')).decode())}
+            'usersëcret'.encode()).decode())}
     response = c.get('/foo', headers=headers, status=403)
 
     headers = {
         'Authorization': 'Basic ' + str(base64.b64encode(
-            u'user:sëcret:'.encode('utf8')).decode())}
+            'user:sëcret:'.encode()).decode())}
     response = c.get('/foo', headers=headers, status=403)
 
 
@@ -147,7 +146,7 @@ def test_basic_auth_remember():
 
     @App.path(path='{id}',
               variables=lambda model: {'id': model.id})
-    class Model(object):
+    class Model:
         def __init__(self, id):
             self.id = id
 
@@ -174,7 +173,7 @@ def test_basic_auth_forget():
         pass
 
     @App.path(path='{id}')
-    class Model(object):
+    class Model:
         def __init__(self, id):
             self.id = id
 
@@ -210,7 +209,7 @@ def test_login():
     def get_identity_policy():
         return BasicAuthIdentityPolicy()
 
-    class Login(object):
+    class Login:
         pass
 
     @App.path(model=Login, path='login')
