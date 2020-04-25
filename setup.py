@@ -1,20 +1,22 @@
 from setuptools import setup, find_packages
 
 long_description = (
-    open('README.rst', encoding='utf-8').read() + '\n\n'
-    + open('CHANGES.rst', encoding='utf-8').read())
+    open("README.rst", encoding="utf-8").read()
+    + "\n\n"
+    + open("CHANGES.rst", encoding="utf-8").read()
+)
 
 setup(
-    name='more.basicauth',
-    version='0.5.dev0',
+    name="more.basicauth",
+    version="0.5.dev0",
     description="Basic Auth Identity Policy for Morepath",
     long_description=long_description,
     author="Morepath developers",
     author_email="morepath@googlegroups.com",
-    keywords='morepath basicauth identity authentication',
+    keywords="morepath basicauth identity authentication",
     license="BSD",
     url="https://github.com/morepath/more.basicauth",
-    namespace_packages=['more'],
+    namespace_packages=["more"],
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
@@ -32,21 +34,14 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Development Status :: 5 - Production/Stable",
     ],
-    install_requires=[
-        'morepath >= 0.19',
-    ],
+    install_requires=["morepath >= 0.19",],
     extras_require=dict(
         test=[
-            'pytest >= 2.9.1',
-            'pytest-remove-stale-bytecode',
-            'WebTest >= 2.0.14',
+            "pytest >= 2.9.1",
+            "pytest-remove-stale-bytecode",
+            "WebTest >= 2.0.14",
         ],
-        pep8=[
-            'flake8',
-            'black',
-        ],
-        coverage=[
-            'pytest-cov',
-        ],
+        pep8=["flake8", "black",],
+        coverage=["pytest-cov",],
     ),
 )

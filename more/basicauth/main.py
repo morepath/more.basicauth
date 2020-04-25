@@ -1,13 +1,13 @@
 import binascii
 from base64 import b64decode
 
-from morepath import (Identity, NO_IDENTITY)
+from morepath import Identity, NO_IDENTITY
 
 
 class BasicAuthIdentityPolicy:
     """Identity policy that uses HTTP Basic Authentication."""
 
-    def __init__(self, realm='Realm'):
+    def __init__(self, realm="Realm"):
         self.realm = realm
 
     def identify(self, request):
@@ -19,7 +19,7 @@ class BasicAuthIdentityPolicy:
         """
         try:
             authorization = request.authorization
-        except ValueError:   # pragma: no cover
+        except ValueError:  # pragma: no cover
             return NO_IDENTITY
         if authorization is None:
             return NO_IDENTITY
@@ -56,8 +56,9 @@ class BasicAuthIdentityPolicy:
         :type request: :class:`morepath.Request`
 
         """
-        response.headers.add('WWW-Authenticate',
-                             'Basic realm="%s"' % self.realm)
+        response.headers.add(
+            "WWW-Authenticate", 'Basic realm="%s"' % self.realm
+        )
 
 
 class BasicAuthInfo:
@@ -74,7 +75,7 @@ def parse_basic_auth(authtype, params):
     # except ValueError:
     #     return None
 
-    if authtype != 'Basic':
+    if authtype != "Basic":
         return None
     try:
         authbytes = b64decode(params.strip())
@@ -84,13 +85,13 @@ def parse_basic_auth(authtype, params):
     # try utf-8 first, then latin-1; see discussion in
     # https://github.com/Pylons/pyramid/issues/898
     try:
-        auth = authbytes.decode('utf-8')
+        auth = authbytes.decode("utf-8")
     except UnicodeDecodeError:
         # might get nonsense but normally not get decode error
-        auth = authbytes.decode('latin-1')
+        auth = authbytes.decode("latin-1")
 
     try:
-        username, password = auth.split(':', 1)
+        username, password = auth.split(":", 1)
     except ValueError:  # not enough values to unpack
         return None
 
