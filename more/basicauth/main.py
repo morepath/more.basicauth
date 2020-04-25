@@ -1,11 +1,10 @@
 import binascii
-import base64
+from base64 import b64decode
 
 from morepath import (Identity, NO_IDENTITY)
-from morepath.compat import bytes_
 
 
-class BasicAuthIdentityPolicy(object):
+class BasicAuthIdentityPolicy:
     """Identity policy that uses HTTP Basic Authentication."""
 
     def __init__(self, realm='Realm'):
@@ -20,7 +19,7 @@ class BasicAuthIdentityPolicy(object):
         """
         try:
             authorization = request.authorization
-        except ValueError:
+        except ValueError:   # pragma: no cover
             return NO_IDENTITY
         if authorization is None:
             return NO_IDENTITY
@@ -61,7 +60,7 @@ class BasicAuthIdentityPolicy(object):
                              'Basic realm="%s"' % self.realm)
 
 
-class BasicAuthInfo(object):
+class BasicAuthInfo:
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -96,7 +95,3 @@ def parse_basic_auth(authtype, params):
         return None
 
     return BasicAuthInfo(username, password)
-
-
-def b64decode(v):
-    return base64.b64decode(bytes_(v))

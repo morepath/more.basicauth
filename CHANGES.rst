@@ -4,7 +4,13 @@ CHANGES
 0.5 (unreleased)
 ================
 
-- Nothing changed yet.
+- **Removed**: Removed support for Python 2.
+  
+  You have to upgrade to Python 3 if you want to use this version.
+
+- Dropped support for Python 3.3 and added support for Python 3.5, 3.6, 3.7 and PyPy 3.6.
+
+- Make Python 3.7 the default testing environment.
 
 
 0.4 (2016-10-21)
