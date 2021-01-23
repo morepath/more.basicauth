@@ -1,3 +1,18 @@
+.. image:: https://github.com/morepath/more.basicauth/workflows/CI/badge.svg?branch=master
+   :target: https://github.com/morepath/more.basicauth/actions?workflow=CI
+   :alt: CI Status
+
+.. image:: https://coveralls.io/repos/github/morepath/more.basicauth/badge.svg?branch=master
+    :target: https://coveralls.io/github/morepath/more.basicauth?branch=master
+
+.. image:: https://img.shields.io/pypi/v/more.basicauth.svg
+  :target: https://pypi.org/project/more.basicauth/
+
+.. image:: https://img.shields.io/pypi/pyversions/more.basicauth.svg
+  :target: https://pypi.org/project/more.basicauth/
+
+
+
 more.basicauth: HTTP Basic Authentication integration for Morepath
 ==================================================================
 
@@ -131,5 +146,5 @@ The login form could look like::
 Requirements
 ------------
 
--  Python (3.4, 3.5, 3.7, 3.8)
+-  Python (3.4, 3.5, 3.7, 3.8, 3.9)
 -  morepath (>= 0.19)
