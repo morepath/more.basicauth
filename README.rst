@@ -2,9 +2,6 @@
    :target: https://github.com/morepath/more.basicauth/actions?workflow=CI
    :alt: CI Status
 
-.. image:: https://coveralls.io/repos/github/morepath/more.basicauth/badge.svg?branch=master
-    :target: https://coveralls.io/github/morepath/more.basicauth?branch=master
-
 .. image:: https://img.shields.io/pypi/v/more.basicauth.svg
   :target: https://pypi.org/project/more.basicauth/
 
@@ -26,7 +23,7 @@ you don't want we decide to move it to a separate extension.
 Some Pros and Cons:
 
 *  This argues against basic auth:
-   http://adrianotto.com/2013/02/why-http-basic-auth-is-bad
+   https://web.archive.org/web/20130812135014/http://adrianotto.com/2013/02/why-http-basic-auth-is-bad
 *  But this argues *for* basic auth:
    https://www.rdegges.com/2015/why-i-love-basic-auth
 
@@ -37,7 +34,7 @@ Alternative authentication extensions for morepath are:
 * `more.isdangerous`_:
   A cookie based identity policy using isdangerous.
 
-.. _Morepath: http://morepath.readthedocs.org
+.. _Morepath: https://morepath.readthedocs.io
 .. _more.jwtauth: https://github.com/morepath/more.jwtauth
 .. _more.isdangerous: https://github.com/morepath/more.itsdangerous
 
@@ -141,10 +138,3 @@ The login form could look like::
             raise HTTPProxyAuthenticationRequired('Invalid username/password')
 
         return "You're logged in."  # or something more fancy
-
-
-Requirements
-------------
-
--  Python (3.4, 3.5, 3.7, 3.8, 3.9)
--  morepath (>= 0.19)
