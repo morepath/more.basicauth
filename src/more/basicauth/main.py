@@ -1,7 +1,7 @@
 import binascii
 from base64 import b64decode
 
-from morepath import Identity, NO_IDENTITY
+from morepath import NO_IDENTITY, Identity
 
 
 class BasicAuthIdentityPolicy:
@@ -56,9 +56,7 @@ class BasicAuthIdentityPolicy:
         :type request: :class:`morepath.Request`
 
         """
-        response.headers.add(
-            "WWW-Authenticate", 'Basic realm="%s"' % self.realm
-        )
+        response.headers.add("WWW-Authenticate", f'Basic realm="{self.realm}"')
 
 
 class BasicAuthInfo:

@@ -1,10 +1,11 @@
-import morepath
-from morepath import Response, Identity, NO_IDENTITY
+import base64
 
-from more.basicauth import BasicAuthIdentityPolicy
 from webob.exc import HTTPForbidden, HTTPProxyAuthenticationRequired
 from webtest import TestApp as Client
-import base64
+
+import morepath
+from more.basicauth import BasicAuthIdentityPolicy
+from morepath import NO_IDENTITY, Identity, Response
 
 
 def test_basic_auth_identity_policy():
@@ -18,9 +19,7 @@ def test_basic_auth_identity_policy():
     class Permission:
         pass
 
-    @App.path(
-        model=Model, path="{id}", variables=lambda model: {"id": model.id}
-    )
+    @App.path(model=Model, path="{id}", variables=lambda model: {"id": model.id})
     def get_model(id):
         return Model(id)
 
@@ -30,7 +29,7 @@ def test_basic_auth_identity_policy():
 
     @App.view(model=Model, permission=Permission)
     def default(self, request):
-        return "Model: %s" % self.id
+        return f"Model: {self.id}"
 
     @App.identity_policy()
     def policy():
@@ -54,14 +53,12 @@ def test_basic_auth_identity_policy():
     response = c.get("/foo", status=401)
 
     headers = {
-        "Authorization": "Basic "
-        + str(base64.b64encode(b"user:wrong").decode())
+        "Authorization": "Basic " + str(base64.b64encode(b"user:wrong").decode())
     }
     response = c.get("/foo", headers=headers, status=401)
 
     headers = {
-        "Authorization": "Basic "
-        + str(base64.b64encode(b"user:secret").decode())
+        "Authorization": "Basic " + str(base64.b64encode(b"user:secret").decode())
     }
     response = c.get("/foo", headers=headers)
     assert response.body == b"Model: foo"
@@ -78,9 +75,7 @@ def test_basic_auth_identity_policy_errors():
     class Permission:
         pass
 
-    @App.path(
-        model=Model, path="{id}", variables=lambda model: {"id": model.id}
-    )
+    @App.path(model=Model, path="{id}", variables=lambda model: {"id": model.id})
     def get_model(id):
         return Model(id)
 
@@ -90,7 +85,7 @@ def test_basic_auth_identity_policy_errors():
 
     @App.view(model=Model, permission=Permission)
     def default(self, request):
-        return "Model: %s" % self.id
+        return f"Model: {self.id}"
 
     @App.identity_policy()
     def policy():
