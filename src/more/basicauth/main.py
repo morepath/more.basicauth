@@ -1,16 +1,25 @@
+from __future__ import annotations
+
 import binascii
 from base64 import b64decode
+from typing import TYPE_CHECKING, cast
 
 from morepath import NO_IDENTITY, Identity
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from morepath import Request, Response
+    from morepath.authentication import NoIdentity
 
 
 class BasicAuthIdentityPolicy:
     """Identity policy that uses HTTP Basic Authentication."""
 
-    def __init__(self, realm="Realm"):
+    def __init__(self, realm: str = "Realm"):
         self.realm = realm
 
-    def identify(self, request):
+    def identify(self, request: Request) -> Identity | NoIdentity:
         """Establish claimed identity using request.
 
         :param request: Request to extract identity information from.
@@ -29,7 +38,9 @@ class BasicAuthIdentityPolicy:
             return NO_IDENTITY
         return Identity(userid=auth.username, password=auth.password)
 
-    def remember(self, response, request, identity):
+    def remember(
+        self, response: Response, request: Request, identity: Identity
+    ) -> None:
         """Remember identity on response.
 
         This is a no-op for basic auth, as the browser re-identifies
@@ -43,7 +54,7 @@ class BasicAuthIdentityPolicy:
         :type identity: :class:`morepath.Identity`
         """
 
-    def forget(self, response, request):
+    def forget(self, response: Response, request: Request) -> None:
         """Forget identity on response.
 
         This causes the browser to issue a basic authentication
@@ -60,14 +71,16 @@ class BasicAuthIdentityPolicy:
 
 
 class BasicAuthInfo:
-    def __init__(self, username, password):
+    def __init__(self, username: str, password: str) -> None:
         self.username = username
         self.password = password
 
 
 # code taken from
 # pyramid.authentication.BasicAuthenticationPolicy._get_credentials
-def parse_basic_auth(authtype, params):
+def parse_basic_auth(
+    authtype: str, params: Mapping[str, str] | str
+) -> BasicAuthInfo | None:
     # try:
     #     authtype, params = parse_auth(value)
     # except ValueError:
@@ -76,7 +89,7 @@ def parse_basic_auth(authtype, params):
     if authtype != "Basic":
         return None
     try:
-        authbytes = b64decode(params.strip())
+        authbytes = b64decode(cast("str", params).strip())
     except (TypeError, binascii.Error):  # can't decode
         return None
 

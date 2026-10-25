@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import base64
+from typing import TYPE_CHECKING, Any
 
 from webob.exc import HTTPForbidden, HTTPProxyAuthenticationRequired
 from webtest import TestApp as Client
@@ -7,43 +10,49 @@ import morepath
 from more.basicauth import BasicAuthIdentityPolicy
 from morepath import NO_IDENTITY, Identity, Response
 
+if TYPE_CHECKING:
+    from morepath import Request
+    from morepath.authentication import NoIdentity
 
-def test_basic_auth_identity_policy():
+
+def test_basic_auth_identity_policy() -> None:
     class App(morepath.App):
         pass
 
     class Model:
-        def __init__(self, id):
+        def __init__(self, id: str) -> None:
             self.id = id
 
     class Permission:
         pass
 
     @App.path(model=Model, path="{id}", variables=lambda model: {"id": model.id})
-    def get_model(id):
+    def get_model(id: str) -> Model:
         return Model(id)
 
     @App.permission_rule(model=Model, permission=Permission)
-    def get_permission(identity, model, permission):
-        return identity.userid == "user" and identity.password == "secret"
+    def get_permission(
+        identity: Identity, model: Model, permission: Permission
+    ) -> bool:
+        return bool(identity.userid == "user" and identity.password == "secret")
 
     @App.view(model=Model, permission=Permission)
-    def default(self, request):
+    def default(self: Model, request: Request[App]) -> str:
         return f"Model: {self.id}"
 
     @App.identity_policy()
-    def policy():
+    def policy() -> BasicAuthIdentityPolicy:
         return BasicAuthIdentityPolicy()
 
     @App.verify_identity()
-    def verify_identity(identity):
+    def verify_identity(identity: Identity | NoIdentity) -> bool:
         assert identity is not NO_IDENTITY
         return True
 
     @App.view(model=HTTPForbidden)
-    def make_unauthorized(self, request):
+    def make_unauthorized(self: HTTPForbidden, request: Request[App]) -> str:
         @request.after
-        def set_status_code(response):
+        def set_status_code(response: Response) -> None:
             response.status_code = 401
 
         return "Unauthorized"
@@ -64,35 +73,39 @@ def test_basic_auth_identity_policy():
     assert response.body == b"Model: foo"
 
 
-def test_basic_auth_identity_policy_errors():
+def test_basic_auth_identity_policy_errors() -> None:
     class App(morepath.App):
         pass
 
     class Model:
-        def __init__(self, id):
+        def __init__(self, id: str) -> None:
             self.id = id
 
     class Permission:
         pass
 
     @App.path(model=Model, path="{id}", variables=lambda model: {"id": model.id})
-    def get_model(id):
+    def get_model(id: str) -> Model:
         return Model(id)
 
     @App.permission_rule(model=Model, permission=Permission)
-    def get_permission(identity, model, permission):
-        return identity.userid == "user" and identity.password == "sëcret"
+    def get_permission(
+        identity: Identity,
+        model: Model,
+        permission: Permission,
+    ) -> bool:
+        return bool(identity.userid == "user" and identity.password == "sëcret")
 
     @App.view(model=Model, permission=Permission)
-    def default(self, request):
+    def default(self: Model, request: Request[App]) -> str:
         return f"Model: {self.id}"
 
     @App.identity_policy()
-    def policy():
+    def policy() -> BasicAuthIdentityPolicy:
         return BasicAuthIdentityPolicy()
 
     @App.verify_identity()
-    def verify_identity(identity):
+    def verify_identity(identity: Identity | NoIdentity) -> bool:
         return True
 
     c = Client(App())
@@ -147,17 +160,17 @@ def test_basic_auth_identity_policy_errors():
     response = c.get("/foo", headers=headers, status=403)
 
 
-def test_basic_auth_remember():
+def test_basic_auth_remember() -> None:
     class App(morepath.App):
         pass
 
     @App.path(path="{id}", variables=lambda model: {"id": model.id})
     class Model:
-        def __init__(self, id):
+        def __init__(self, id: str) -> None:
             self.id = id
 
     @App.view(model=Model)
-    def default(self, request):
+    def default(self: Model, request: Request[App]) -> Response:
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
         response = Response()
@@ -165,7 +178,7 @@ def test_basic_auth_remember():
         return response
 
     @App.identity_policy()
-    def policy():
+    def policy() -> BasicAuthIdentityPolicy:
         return BasicAuthIdentityPolicy()
 
     c = Client(App())
@@ -174,17 +187,17 @@ def test_basic_auth_remember():
     assert response.body == b""
 
 
-def test_basic_auth_forget():
+def test_basic_auth_forget() -> None:
     class App(morepath.App):
         pass
 
     @App.path(path="{id}")
     class Model:
-        def __init__(self, id):
+        def __init__(self, id: str) -> None:
             self.id = id
 
     @App.view(model=Model)
-    def default(self, request):
+    def default(self: Model, request: Request[App]) -> Response:
         # will not actually do anything as it's a no-op for basic
         # auth, but at least won't crash
         response = Response(content_type="text/plain")
@@ -192,7 +205,7 @@ def test_basic_auth_forget():
         return response
 
     @App.identity_policy()
-    def policy():
+    def policy() -> BasicAuthIdentityPolicy:
         return BasicAuthIdentityPolicy()
 
     c = Client(App())
@@ -207,25 +220,25 @@ def test_basic_auth_forget():
     ]
 
 
-def test_login():
+def test_login() -> None:
     class App(morepath.App):
         pass
 
     @App.identity_policy()
-    def get_identity_policy():
+    def get_identity_policy() -> BasicAuthIdentityPolicy:
         return BasicAuthIdentityPolicy()
 
     class Login:
         pass
 
     @App.path(model=Login, path="login")
-    def get_login():
+    def get_login() -> Login:
         return Login()
 
     @App.json(model=Login, request_method="POST")
-    def login(self, request):
-        username = request.POST["username"]
-        password = request.POST["password"]
+    def login(self: Login, request: Request[App]) -> dict[str, Any]:
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         if not user_has_password(username, password):
             raise HTTPProxyAuthenticationRequired("Invalid username/password")
 
@@ -233,7 +246,7 @@ def test_login():
             "username": username,
         }
 
-    def user_has_password(username, password):
+    def user_has_password(username: object, password: object) -> bool:
         return username == "user" and password == "password"
 
     c = Client(App())

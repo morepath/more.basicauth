@@ -130,8 +130,8 @@ The login form could look like::
 
     @App.view(model=Login, request_method='POST')
     def login(self, request):
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         # Do the password validation.
         if not user_has_password(username, password):
